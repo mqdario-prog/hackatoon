@@ -1,66 +1,75 @@
-/* ===================================
-   ESTILOS PERSONALIZADOS - InclusivJob
-   =================================== */
-
-/* Focus visible para accesibilidad */
-:focus {
-    outline: 3px solid #F59E0B !important;
-    outline-offset: 3px;
+/* --- ACCESIBILIDAD --- */
+:focus { 
+    outline: 3px solid #F59E0B !important; 
+    outline-offset: 3px; 
 }
 
-/* Screen Reader Only */
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
+.sr-only { 
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; 
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; 
 }
 
-/* ===================================
-   MODOS DE ACCESIBILIDAD
-   =================================== */
-
-/* Fuente para Dislexia */
-.dyslexia-font {
-    font-family: 'Verdana', 'Comic Sans MS', sans-serif !important;
-    letter-spacing: 0.05em;
-    line-height: 1.8;
+/* Tipografía para dislexia */
+.dyslexia-font { 
+    font-family: 'Verdana', 'Comic Sans MS', sans-serif !important; 
+    letter-spacing: 0.05em; 
+    line-height: 1.8; 
 }
 
-/* Alto Contraste */
-.high-contrast {
-    filter: contrast(150%);
-    background-color: #000 !important;
-    color: #ff0 !important;
+/* Modo Alto Contraste */
+.high-contrast { 
+    filter: contrast(150%); 
+    background-color: #000 !important; 
+    color: #ff0 !important; 
 }
 
-.high-contrast * {
-    background-color: #000 !important;
-    color: #ff0 !important;
-    border-color: #ff0 !important;
+.high-contrast * { 
+    background-color: #000 !important; 
+    color: #ff0 !important; 
+    border-color: #ff0 !important; 
 }
 
-.high-contrast img {
-    filter: grayscale(100%) contrast(120%);
+.high-contrast img { 
+    filter: grayscale(100%) contrast(120%); 
 }
 
-/* ===================================
-   MAPA (Leaflet)
-   =================================== */
-
-#mapa-ofertas {
-    height: 400px;
-    width: 100%;
-    z-index: 1;
-    border-radius: 15px;
+/* --- MAPA LEAFLET --- */
+#mapa-ofertas { 
+    height: 400px; 
+    width: 100%; 
+    z-index: 1; 
 }
 
-/* Ajuste para que el mapa no tape el desplegable del buscador */
-.leaflet-pane {
-    z-index: 1 !important;
+/* Evitar que el mapa tape los desplegables o el header */
+.leaflet-pane { z-index: 1 !important; }
+.leaflet-top, .leaflet-bottom { z-index: 2 !important; }
+
+/* --- COMPONENTES --- */
+
+/* Pantalla de carga */
+#loading-overlay.flex {
+    display: flex;
+}
+
+/* Ajuste de scroll para el Chatbot */
+#chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+#chat-messages::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 10px;
+}
+
+/* Colores para las etiquetas de fuente (Dinámicos) */
+.fuente-tecno { @apply bg-purple-100 text-purple-800 border-purple-200; }
+.fuente-indeed { @apply bg-blue-100 text-blue-800 border-blue-200; }
+.fuente-info { @apply bg-orange-100 text-orange-800 border-orange-200; }
+
+/* --- MODO OSCURO (Nativo de Tailwind pero con ajustes) --- */
+.dark .leaflet-layer,
+.dark .leaflet-control-zoom-in,
+.dark .leaflet-control-zoom-out,
+.dark .leaflet-control-attribution {
+    filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
 }

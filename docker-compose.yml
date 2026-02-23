@@ -21,6 +21,8 @@ services:
       - "8000:8000"
     depends_on:
       - db
+    volumes:
+      - .:/app
     environment:
       - DATABASE_URL=mysql+pymysql://root@db/inclusivjob
 
