@@ -1,7 +1,34 @@
-/* --- ACCESIBILIDAD --- */
+:root {
+    --brand-primary: #1E40AF;
+    --brand-secondary: #10B981;
+    --brand-accent: #F59E0B;
+}
+
+/* El foco de accesibilidad ahora es Ámbar (más visible y cálido) */
 :focus { 
-    outline: 3px solid #F59E0B !important; 
+    outline: 3px solid var(--brand-accent) !important; 
     outline-offset: 3px; 
+}
+
+/* Personalizar los clusters del mapa para que sean verdes (positivos) */
+.marker-cluster-small { background-color: rgba(16, 185, 129, 0.6); }
+.marker-cluster-small div { background-color: rgba(16, 185, 129, 1); color: white; }
+
+/* Scrollbar con el azul de la marca */
+#chat-messages::-webkit-scrollbar-thumb {
+    background-color: var(--brand-primary);
+    border-radius: 10px;
+}
+
+/* Estilo para las tarjetas de oferta */
+.oferta-card {
+    border-left: 4px solid var(--brand-primary);
+    transition: all 0.3s ease;
+}
+
+.oferta-card:hover {
+    border-left-color: var(--brand-secondary);
+    transform: translateX(5px);
 }
 
 .sr-only { 
@@ -72,4 +99,60 @@
 .dark .leaflet-control-zoom-out,
 .dark .leaflet-control-attribution {
     filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
+/* --- ESTILO BASE PARA BOTONES FLOTANTES QUE SE EXPANDEN --- */
+.cv-btn, .chat-btn {
+    width: 60px;
+    height: 60px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Alinea el icono al inicio */
+    padding-left: 1rem; /* Espacio para que el icono no toque el borde al expandirse */
+}
+
+/* Pseudo-elemento común para el texto */
+.cv-btn span::after, .chat-btn span::after {
+    content: "";
+    font-size: 0;
+    opacity: 0;
+    transition: opacity 0.2s ease, margin 0.3s ease;
+    font-weight: bold;
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+    vertical-align: middle;
+}
+
+/* --- LOGICA ESPECIFICA PARA CV --- */
+.cv-btn:hover {
+    width: 170px; /* Ancho suficiente para "Crear CV" */
+    border-radius: 30px;
+}
+.cv-btn:hover span::after {
+    content: " Crear CV";
+    font-size: 1rem;
+    opacity: 1;
+    margin-left: 10px;
+}
+
+/* --- LOGICA ESPECIFICA PARA CHAT --- */
+.chat-btn:hover {
+    width: 190px; /* Un poco más ancho para "Asistente IA" */
+    border-radius: 30px;
+}
+.chat-btn:hover span::after {
+    content: " Asistente IA";
+    font-size: 1rem;
+    opacity: 1;
+    margin-left: 10px;
+}
+
+/* Evitar efectos raros en móviles (donde no hay hover real) */
+@media (max-width: 768px) {
+    .cv-btn:hover, .chat-btn:hover {
+        width: 60px;
+    }
+    .cv-btn:hover span::after, .chat-btn:hover span::after {
+        content: "";
+    }
 }

@@ -1,54 +1,37 @@
-# Usar Python 3.11 slim (Debian Bookworm)
-FROM python:3.11-slim
+# Usamos la versión COMPLETA de Python (más robusta que la slim)
+FROM python:3.11
 
-# Evitar prompts de apt y configurar entorno
-ENV DEBIAN_FRONTEND=noninteractive
+# Configuración de entorno
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# 1. Instalar dependencias básicas que SÍ existen en Debian 12
+# 1. Instalamos solo lo mínimo indispensable (Chrome y dependencias de PDF)
 RUN apt-get update && apt-get install -y \
     wget \
-    curl \
     gnupg \
-    unzip \
     ca-certificates \
-    libnss3 \
-    libatk1.0-0 \
-    libatk-bridge2.0-0 \
-    libcups2 \
-    libdrm2 \
-    libxkbcommon0 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxrandr2 \
-    libgbm1 \
-    libasound2 \
-    libpango-1.0-0 \
-    xdg-utils \
-    --no-install-recommends \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    libpangocairo-1.0-0 \
+    libgdk-pixbuf-2.0-0 \
+    shared-mime-info \
+    --no-install-recommends
 
-# 2. Descargar e instalar Chrome directamente 
-# El comando 'apt-get install -f' arreglará cualquier dependencia faltante automáticamente
+# 2. Instalamos Chrome
 RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-    && apt-get update \
     && apt-get install -y ./google-chrome-stable_current_amd64.deb \
     && rm google-chrome-stable_current_amd64.deb \
     && apt-get clean
 
-# 3. Configurar directorio de trabajo
+# 3. Directorio de trabajo
 WORKDIR /app
 
-# 4. Instalar librerías de Python
+# 4. Instalamos las librerías de Python
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 5. Copiar el código
+# 5. Copiamos el código
 COPY . .
 
-# Exponer FastAPI
 EXPOSE 8000
 
+# Ejecutamos con reload para que veas tus cambios al guardar
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

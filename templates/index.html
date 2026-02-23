@@ -293,8 +293,11 @@
     </main>
 
     <!-- Chatbot -->
-    <button id="chat-btn" aria-label="Abrir asistente" aria-expanded="false" class="fixed bottom-6 right-6 z-50 bg-blue-800 dark:bg-blue-700 text-white p-4 rounded-full shadow-2xl hover:bg-blue-900 transition focus:ring-4 focus:ring-orange-400 transform hover:scale-105" onclick="toggleChat()">
-        <span class="text-2xl" aria-hidden="true">💬</span>
+    <a id="cv-btn" href="/cv" class="cv-btn fixed bottom-24 right-6 z-50 bg-blue-800 text-white p-4 rounded-full shadow-2xl hover:bg-blue-900 transition-all duration-300 flex items-center group overflow-hidden" aria-label="Crear currículum">
+        <span class="text-2xl flex items-center justify-center" aria-hidden="true">📄</span>
+    </a>
+    <button id="chat-btn" onclick="toggleChat()" class="chat-btn fixed bottom-6 right-6 z-50 bg-blue-800 text-white p-4 rounded-full shadow-2xl hover:bg-blue-900 transition-all duration-300 flex items-center overflow-hidden" aria-label="Abrir asistente">
+        <span class="text-2xl flex items-center justify-center" aria-hidden="true">💬</span>
     </button>
 
     <section id="chat-window" aria-hidden="true" class="hidden fixed bottom-24 right-6 w-80 md:w-96 bg-white dark:bg-dark-800 rounded-xl shadow-2xl border-2 border-blue-800 dark:border-blue-600 z-50 flex flex-col h-[500px] transition-colors overflow-hidden">

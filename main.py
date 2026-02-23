@@ -1,6 +1,8 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
+from weasyprint import HTML
+from io import BytesIO
 from pydantic import BaseModel
 import pandas as pd
 import os
@@ -93,6 +95,60 @@ def cerebro_gratuito(pregunta, df):
         "Entendido. Para ayudarte mejor, ¿buscas un puesto específico o prefieres filtrar por ubicación?"
     ]
     return random.choice(respuestas_fallback)
+
+# Generador CVs
+
+@app.get("/cv", response_class=HTMLResponse)
+def cv_form(request: Request):
+    # Asegúrate de que cv_form.html esté en la carpeta templates/
+    return templates.TemplateResponse("cv_form.html", {"request": request})
+
+@app.post("/generar-cv")
+def generar_cv(
+    nombre: str = Form(...),
+    email: str = Form(...),
+    telefono: str = Form(None),
+    linkedin: str = Form(None),
+    ciudad: str = Form(None),
+    certificado_discapacidad: str = Form(...),
+    perfil: str = Form(None),
+    puesto_actual: str = Form(...),
+    empresa_actual: str = Form(...),
+    experiencias: str = Form(None),
+    habilidades: str = Form(None),
+    educacion: str = Form(None),
+    idiomas: str = Form(None)
+):
+    # Procesar strings a listas
+    experiencias_lista = [exp.strip() for exp in experiencias.split(',') if exp.strip()] if experiencias else []
+    habilidades_lista = [hab.strip() for hab in habilidades.split(',') if hab.strip()] if habilidades else []
+    idiomas_lista = [lang.strip() for lang in idiomas.split(',') if lang.strip()] if idiomas else []
+    
+    html_string = templates.get_template("cv_template.html").render({
+        "nombre": nombre,
+        "email": email,
+        "telefono": telefono,
+        "linkedin": linkedin,
+        "ciudad": ciudad,
+        "certificado_discapacidad": certificado_discapacidad,
+        "perfil": perfil,
+        "puesto_actual": puesto_actual,
+        "empresa_actual": empresa_actual,
+        "experiencias": experiencias_lista,
+        "habilidades": habilidades_lista,
+        "educacion": educacion,
+        "idiomas": idiomas_lista
+    })
+    
+    pdf_buffer = BytesIO()
+    HTML(string=html_string).write_pdf(pdf_buffer)
+    pdf_buffer.seek(0)
+    
+    return StreamingResponse(
+        pdf_buffer,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename=CV_{nombre.replace(' ', '_')}.pdf"}
+    )
 
 # En main.py
 

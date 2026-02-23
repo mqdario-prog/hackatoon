@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        /* Configuramos la página A4 sin márgenes para el fondo del sidebar */
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            color: #1a202c;
+            margin: 0;
+            padding: 0;
+            background: white;
+            line-height: 1.5;
+        }
+        /* Contenedor principal para dividir en dos columnas */
+        .wrapper {
+            width: 100%;
+            display: table; /* Usamos table para máxima compatibilidad con PDF */
+        }
+        
+        /* COLUMNA IZQUIERDA (SIDEBAR) */
+        .sidebar {
+            display: table-cell;
+            width: 30%;
+            background-color: #1e3a8a;
+            color: white;
+            padding: 40px 20px;
+            vertical-align: top;
+            height: 297mm; /* Altura completa de un A4 */
+        }
+        
+        /* COLUMNA DERECHA (CONTENIDO) */
+        .main-content {
+            display: table-cell;
+            width: 70%;
+            padding: 40px 30px;
+            vertical-align: top;
+            background: white;
+        }
+
+        /* Estilos de Texto */
+        .nombre { font-size: 26pt; font-weight: bold; margin-bottom: 5px; color: white; line-height: 1.1; }
+        .puesto-principal { font-size: 11pt; text-transform: uppercase; color: #93c5fd; letter-spacing: 1px; margin-bottom: 30px; }
+        
+        .side-section { margin-bottom: 25px; }
+        .side-title { 
+            font-size: 10pt; font-weight: bold; text-transform: uppercase; 
+            border-bottom: 1px solid #3b82f6; padding-bottom: 5px; margin-bottom: 10px; color: #60a5fa;
+        }
+        .side-item { font-size: 9pt; margin-bottom: 6px; color: #e2e8f0; word-wrap: break-word; }
+
+        .section { margin-bottom: 25px; }
+        .section-title { 
+            font-size: 14pt; font-weight: bold; color: #1e3a8a; 
+            border-bottom: 2px solid #e2e8f0; padding-bottom: 5px; margin-bottom: 12px;
+        }
+        .perfil-text { font-size: 10pt; color: #4a5568; font-style: italic; margin-bottom: 10px; }
+        
+        .exp-box { margin-bottom: 15px; }
+        .exp-header { font-weight: bold; font-size: 11pt; color: #2d3748; }
+        .exp-sub { font-size: 9.5pt; color: #2563eb; font-weight: 600; }
+        .exp-desc { font-size: 9.5pt; color: #4a5568; margin-top: 3px; }
+        
+        .tag {
+            display: inline-block;
+            background: #f1f5f9;
+            color: #1e3a8a;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 8.5pt;
+            font-weight: bold;
+            margin-right: 4px;
+            margin-bottom: 4px;
+            border: 1px solid #e2e8f0;
+        }
+        .badge-a11y {
+            background-color: #10b981;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 8pt;
+            font-weight: bold;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- BARRA LATERAL -->
+        <div class="sidebar">
+            <div class="nombre">{{ nombre }}</div>
+            <div class="puesto-principal">{{ puesto_actual }}</div>
+
+            <div class="side-section">
+                <div class="side-title">CONTACTO</div>
+                <div class="side-item">EMAIL: {{ email }}</div>
+                <div class="side-item">TEL: {{ telefono }}</div>
+                {% if ciudad %}<div class="side-item">LOC: {{ ciudad }}</div>{% endif %}
+            </div>
+
+            <div class="side-section">
+                <div class="side-title">SITUACIÓN A11Y</div>
+                <div class="side-item">Certificado: {{ certificado_discapacidad }}</div>
+                {% if certificado_discapacidad != "No" %}
+                <div class="badge-a11y">PERFIL INCLUSIVO</div>
+                {% endif %}
+            </div>
+
+            <div class="side-section">
+                <div class="side-title">IDIOMAS</div>
+                {% if idiomas %}
+                    {% for idioma in idiomas %}
+                    <div class="side-item">• {{ idioma }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <div class="main-content">
+            <div class="section">
+                <div class="section-title">RESUMEN PROFESIONAL</div>
+                <div class="perfil-text">{{ perfil }}</div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">EXPERIENCIA PROFESIONAL</div>
+                <div class="exp-box">
+                    <div class="exp-header">{{ puesto_actual }}</div>
+                    <div class="exp-sub">{{ empresa_actual }} | Actualidad</div>
+                </div>
+                {% if experiencias %}
+                    {% for exp in experiencias %}
+                    <div class="exp-box">
+                        <div class="exp-desc">• {{ exp }}</div>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="section">
+                <div class="section-title">FORMACIÓN ACADÉMICA</div>
+                <div class="exp-desc">{{ educacion }}</div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">HABILIDADES TÉCNICAS</div>
+                <div style="margin-top: 10px;">
+                    {% if habilidades %}
+                        {% for habilidad in habilidades %}
+                        <span class="tag">{{ habilidad }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div style="margin-top: 50px; text-align: center; color: #cbd5e1; font-size: 8pt; font-style: italic;">
+                Documento generado por InclusivJob - Formato accesible para reclutamiento
+            </div>
+        </div>
+    </div>
+</body>
+</html>
