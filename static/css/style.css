@@ -1,0 +1,66 @@
+/* ===================================
+   ESTILOS PERSONALIZADOS - InclusivJob
+   =================================== */
+
+/* Focus visible para accesibilidad */
+:focus {
+    outline: 3px solid #F59E0B !important;
+    outline-offset: 3px;
+}
+
+/* Screen Reader Only */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* ===================================
+   MODOS DE ACCESIBILIDAD
+   =================================== */
+
+/* Fuente para Dislexia */
+.dyslexia-font {
+    font-family: 'Verdana', 'Comic Sans MS', sans-serif !important;
+    letter-spacing: 0.05em;
+    line-height: 1.8;
+}
+
+/* Alto Contraste */
+.high-contrast {
+    filter: contrast(150%);
+    background-color: #000 !important;
+    color: #ff0 !important;
+}
+
+.high-contrast * {
+    background-color: #000 !important;
+    color: #ff0 !important;
+    border-color: #ff0 !important;
+}
+
+.high-contrast img {
+    filter: grayscale(100%) contrast(120%);
+}
+
+/* ===================================
+   MAPA (Leaflet)
+   =================================== */
+
+#mapa-ofertas {
+    height: 400px;
+    width: 100%;
+    z-index: 1;
+    border-radius: 15px;
+}
+
+/* Ajuste para que el mapa no tape el desplegable del buscador */
+.leaflet-pane {
+    z-index: 1 !important;
+}
