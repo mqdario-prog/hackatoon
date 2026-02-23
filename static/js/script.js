@@ -169,6 +169,8 @@ async function enviarMensaje() {
         msgBot.className = "flex justify-start";
         msgBot.innerHTML = `<div class="bg-white dark:bg-dark-800 border border-gray-200 dark:border-dark-700 text-gray-800 dark:text-gray-200 rounded-lg p-3 shadow-sm max-w-[90%] text-sm">${data.respuesta}</div>`;
         chatBox.appendChild(msgBot);
+
+        box.innerHTML += `<div class="flex justify-start"><span class="bg-white p-2 rounded-lg border">${data.respuesta}</span></div>`;
         
         // Opcional: Leer respuesta automáticamente
         // speak(data.respuesta.replace(/<[^>]*>/g, ''));

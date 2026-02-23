@@ -8,7 +8,7 @@ import pandas as pd
 import os
 import random
 import math
-from chatbot_service import obtener_respuesta_avanzada
+from chatbot_service import obtener_respuesta_ia
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
 from sqlalchemy import create_engine
@@ -49,52 +49,6 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 class MensajeChat(BaseModel):
     texto: str
-
-# --- CEREBRO GRATUITO (Lógica Python) ---
-def cerebro_gratuito(pregunta, df):
-    pregunta = pregunta.lower()
-    
-    # 1. Saludos básicos
-    if any(x in pregunta for x in ['hola', 'buenos días', 'buenas']):
-        return "¡Hola! Soy tu asistente de empleo inclusivo. Pregúntame por ofertas (ej: 'busco administrativo' o 'trabajo en Madrid')."
-    
-    # 2. Si no hay datos cargados
-    if df.empty:
-        return "Lo siento, ahora mismo no tengo acceso a la base de datos de ofertas. Prueba a ejecutar el scraper."
-
-    # 3. Búsqueda inteligente en el CSV
-    ofertas_encontradas = []
-    
-    # Buscamos coincidencias en Título o Ubicación
-    for _, row in df.iterrows():
-        titulo = str(row.get('Titulo', '')).lower()
-        ubicacion = str(row.get('Ubicacion', '')).lower()
-        
-        # Si la palabra clave del usuario está en el título o ubicación
-        palabras_usuario = [p for p in pregunta.split() if len(p) > 3] # Ignoramos palabras cortas (de, la, en...)
-        
-        match = False
-        for palabra in palabras_usuario:
-            if palabra in titulo or palabra in ubicacion:
-                match = True
-                break
-        
-        if match:
-            ofertas_encontradas.append(f"- {row['Titulo']} en {row['Empresa']} ({row['Ubicacion']})")
-
-    # 4. Generar respuesta
-    if ofertas_encontradas:
-        num = len(ofertas_encontradas)
-        lista_txt = "<br>".join(ofertas_encontradas[:3]) # Mostramos máx 3
-        return f"¡He encontrado {num} ofertas que podrían interesarte!<br><br>{lista_txt}<br><br>¿Te gustaría ver el enlace de alguna?"
-    
-    # 5. Respuestas genéricas si no entiende
-    respuestas_fallback = [
-        "No he encontrado ofertas exactas con esos términos. ¿Prueba a buscar por ciudad (ej: 'Madrid')?",
-        "Mmm, no veo nada específico para eso ahora mismo. ¿Te interesa ver todas las ofertas disponibles?",
-        "Entendido. Para ayudarte mejor, ¿buscas un puesto específico o prefieres filtrar por ubicación?"
-    ]
-    return random.choice(respuestas_fallback)
 
 # Generador CVs
 
@@ -265,34 +219,7 @@ def home(request: Request, pagina: int = 1, busqueda: str = "", ubicacion: str =
         "marcadores": marcadores_mapa 
     })
 
-
-
-
-
-@app.post("/api/chat")
-async def chat_endpoint(mensaje: MensajeChat):
-    # Cargar datos frescos
-    df = pd.DataFrame()
-    if os.path.exists('ofertas_discapacidad.csv'):
-        try:
-            df = pd.read_csv('ofertas_discapacidad.csv')
-        except:
-            pass
-    
-    # Usar el cerebro gratuito
-    respuesta = cerebro_gratuito(mensaje.texto, df)
-    return JSONResponse(content={"respuesta": respuesta})
-
-
-class MensajeChat(BaseModel):
-    mensaje: str
-
 @app.post("/api/chat") # O la ruta que uses
 def chatear(datos: MensajeChat):
-    respuesta = obtener_respuesta_avanzada(datos.mensaje)
+    respuesta = obtener_respuesta_ia(datos.texto)
     return {"respuesta": respuesta}
-
-
-
-
-

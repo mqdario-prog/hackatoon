@@ -13,6 +13,14 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
+  ollama:
+    image: ollama/ollama:latest
+    container_name: inclusivjob_ollama
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+
   web:
     build: .
     container_name: inclusivjob_app
@@ -21,6 +29,7 @@ services:
       - "8000:8000"
     depends_on:
       - db
+      - ollama
     volumes:
       - .:/app
     environment:
@@ -28,3 +37,4 @@ services:
 
 volumes:
   db_data:
+  ollama_data:
