@@ -44,20 +44,42 @@
 }
 
 /* Modo Alto Contraste */
-.high-contrast { 
-    filter: contrast(150%); 
-    background-color: #000 !important; 
-    color: #ff0 !important; 
+/* --- MODO ALTO CONTRASTE CORREGIDO --- */
+
+/* 1. Quitamos el filter del html/body porque rompe el position:fixed */
+.high-contrast {
+    background-color: #000 !important;
 }
 
-.high-contrast * { 
-    background-color: #000 !important; 
-    color: #ff0 !important; 
-    border-color: #ff0 !important; 
+/* 2. Aplicamos colores pero evitamos que el filtro rompa el layout */
+.high-contrast *:not(path):not(svg) {
+    background-color: #000 !important;
+    color: #ffff00 !important; /* Amarillo chillón clásico de accesibilidad */
+    border-color: #ffff00 !important;
+    background-image: none !important; /* Quitar degradados que oculten texto */
 }
 
-.high-contrast img { 
-    filter: grayscale(100%) contrast(120%); 
+/* 3. BLINDAJE DE BOTONES FLOTANTES */
+/* Forzamos que mantengan su posición fija y su nivel de capa (z-index) */
+.high-contrast .cv-btn, 
+.high-contrast .chat-btn {
+    position: fixed !important;
+    z-index: 9999 !important;
+    border: 2px solid #ffff00 !important;
+    background-color: #000 !important;
+}
+
+/* Aseguramos que el span interno (el que tiene el texto dinámico) no se mueva */
+.high-contrast .cv-btn span,
+.high-contrast .chat-btn span {
+    color: #ffff00 !important;
+}
+
+/* 4. Ajuste para que el texto de los botones al hacer hover sea visible */
+.high-contrast .cv-btn:hover span::after,
+.high-contrast .chat-btn:hover span::after {
+    color: #000 !important;
+    background-color: #ffff00 !important;
 }
 
 /* --- MAPA LEAFLET --- */
@@ -110,6 +132,7 @@
     align-items: center;
     justify-content: flex-start; /* Alinea el icono al inicio */
     padding-left: 1rem; /* Espacio para que el icono no toque el borde al expandirse */
+    position: fixed;
 }
 
 /* Pseudo-elemento común para el texto */

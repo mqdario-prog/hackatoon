@@ -16,8 +16,17 @@
             theme: {
                 extend: {
                     colors: {
-                        blue: { 900: '#1e3a8a', 800: '#1e40af', 700: '#1d4ed8' },
-                        dark: { 900: '#0f172a', 800: '#1e293b', 700: '#334155' }
+                        inclusion: {
+                            blue: '#1E40AF',
+                            green: '#10B981',
+                            slate: '#F8FAFC',
+                        },
+                        // ESTA ES LA PARTE QUE FALTABA PARA QUE LA BARRA FUNCIONE:
+                        dark: {
+                            900: '#0f172a',
+                            800: '#1e293b',
+                            700: '#334155'
+                        }
                     }
                 }
             }
@@ -111,8 +120,10 @@
                             Buscar
                         </button>
                     </div>
-
                 </form>
+                <div id="form-error" class="hidden absolute -bottom-10 left-0 w-full text-center text-orange-600 dark:text-orange-400 text-sm font-bold animate-bounce bg-white/80 dark:bg-dark-800 p-1 rounded-lg shadow-sm z-50">
+                    <!-- El mensaje se inserta vía JS -->
+                </div>
             </div>
 
             <!-- Botón Limpiar Filtros -->

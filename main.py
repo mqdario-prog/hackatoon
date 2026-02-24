@@ -136,6 +136,9 @@ def home(request: Request, pagina: int = 1, busqueda: str = "", ubicacion: str =
     except: 
         radio_km = 0
 
+    if not ubicacion.strip():
+        radio_km = 0
+
     if ubicacion:
         ubicacion_usuario = ubicacion.lower().strip()
         
