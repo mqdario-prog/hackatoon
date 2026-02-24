@@ -245,17 +245,36 @@
 
             <!-- Mapa de Ofertas -->
             <section class="container mx-auto px-4 -mt-8 mb-12 relative z-20" aria-labelledby="map-title">
-                <div class="bg-white dark:bg-dark-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-dark-700">
+                <div class="bg-white dark:bg-dark-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-dark-700 transition-colors duration-300">
+
+                    <!-- Cabecera del Mapa -->
                     <div class="px-6 py-4 bg-gray-50 dark:bg-dark-900 border-b border-gray-100 dark:border-dark-700 flex justify-between items-center">
                         <h3 id="map-title" class="font-bold text-gray-700 dark:text-gray-200 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-blue-500" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0121 18.382V7.618a1 1 0 01-.809-.983L15 2m0 16V8m0 16l-4.553-2.276A1 1 0 0015 16.382V5.618a1 1 0 00-.809-.983L9 2"></path></svg>
+                            <!-- Icono con color de marca -->
+                            <svg class="w-5 h-5 text-inclusion-blue" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0121 18.382V7.618a1 1 0 01-.809-.983L15 2m0 16V8m0 16l-4.553-2.276A1 1 0 0015 16.382V5.618a1 1 0 00-.809-.983L9 2"></path>
+                            </svg>
                             Mapa de Oportunidades
                         </h3>
-                        <span class="text-xs font-medium text-gray-500 bg-gray-200 dark:bg-dark-700 px-2 py-1 rounded-full">
-                            {{ total_ofertas }} ofertas visibles geográficamente
-                        </span>
+
+                        <div class="flex items-center gap-3">
+                            <!-- Contador dinámico -->
+                            <span class="hidden sm:inline-block text-xs font-bold text-inclusion-blue bg-inclusion-blue/10 px-3 py-1 rounded-full">
+                                {{ total_ofertas }} vacantes localizadas
+                            </span>
+                            <!-- Mensaje para ciegos (Invisible) -->
+                            <span class="sr-only">Mapa interactivo. Los mismos resultados están disponibles en formato lista en la sección anterior.</span>
+                        </div>
                     </div>
-                    <div id="mapa-ofertas" role="application" aria-label="Mapa interactivo con ubicaciones de empleo"></div>
+
+                    <!-- Contenedor del Mapa (Leaflet) -->
+                    <div id="mapa-ofertas" 
+                         class="bg-gray-100 dark:bg-slate-900" 
+                         style="height: 450px; width: 100%;" 
+                         role="application" 
+                         aria-label="Mapa interactivo que muestra las ofertas de empleo por ubicación geográfica">
+                    </div>
+
                 </div>
             </section>
         </div>
