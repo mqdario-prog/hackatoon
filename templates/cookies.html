@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Política de Cookies - InclusivJob</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='white' stroke='%231e40af' stroke-width='4'/><path d='M35 25a9 9 0 1 1 0 18 9 9 0 0 1 0-18zm28 15h-12v35h-8v-25h-8v10h-8v-20h26v-10h12v10z' fill='%231e40af'/><circle cx='40' cy='75' r='11' stroke='%231e40af' stroke-width='6' fill='none'/></svg>">
+    
+    <link rel="stylesheet" href="/static/css/style.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        inclusion: {
+                            blue: '#1E40AF',
+                            green: '#10B981',
+                            slate: '#F8FAFC',
+                        },
+                        dark: {
+                            900: '#0f172a',
+                            800: '#1e293b',
+                            700: '#334155'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-inclusion-slate dark:bg-slate-900 text-gray-800 dark:text-gray-200 font-sans transition-colors duration-300">
+    
+    {% include 'toolbar.html' %}    
+
+    <header class="bg-inclusion-blue dark:bg-dark-900 text-white py-6 shadow-md transition-colors duration-300">
+        <div class="max-w-4xl mx-auto px-6 flex justify-between items-center">
+            <h1 class="text-2xl font-bold flex items-center gap-2"><span>♿</span> InclusivJob</h1>
+            <a href="/" class="text-sm bg-white/10 hover:bg-white/20 dark:bg-slate-700 dark:hover:bg-slate-600 px-4 py-2 rounded-lg transition">Inicio</a>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 py-12 bg-white dark:bg-slate-800 my-8 shadow-sm rounded-2xl border border-transparent dark:border-slate-700">
+        <h2 class="text-3xl font-extrabold text-inclusion-blue dark:text-blue-400 mb-8 border-b dark:border-slate-700 pb-4">Política de Cookies</h2>
+        
+        <p class="mb-6 dark:text-gray-300">En InclusivJob utilizamos cookies técnicas mínimas para garantizar la mejor experiencia de usuario y accesibilidad.</p>
+
+        <!-- Tabla de Cookies con soporte Dark Mode -->
+        <div class="overflow-hidden border border-gray-200 dark:border-slate-700 rounded-xl mb-8">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
+                <thead class="bg-gray-50 dark:bg-slate-700">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase">Nombre</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase">Finalidad</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase">Duración</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 dark:divide-slate-700 text-sm">
+                    <tr class="bg-white dark:bg-slate-800">
+                        <td class="px-6 py-4 font-mono text-blue-600 dark:text-blue-400 font-bold">theme</td>
+                        <td class="px-6 py-4 dark:text-gray-300">Guarda tu preferencia de modo claro u oscuro.</td>
+                        <td class="px-6 py-4 dark:text-gray-300">Persistente</td>
+                    </tr>
+                    <tr class="bg-gray-50/30 dark:bg-slate-800/50">
+                        <td class="px-6 py-4 font-mono text-blue-600 dark:text-blue-400 font-bold">leaflet-map</td>
+                        <td class="px-6 py-4 dark:text-gray-300">Necesaria para cargar correctamente los tiles del mapa de ofertas.</td>
+                        <td class="px-6 py-4 dark:text-gray-300">Sesión</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Sección Informativa Final -->
+        <section class="bg-blue-50 dark:bg-slate-700/50 p-6 rounded-xl border-l-4 border-blue-400 dark:border-blue-500">
+            <h3 class="font-bold text-blue-800 dark:text-blue-300 mb-2">Cookies de Terceros</h3>
+            <p class="text-sm text-blue-700 dark:text-blue-200">No utilizamos cookies de seguimiento publicitario ni vendemos tus datos de navegación a redes sociales. InclusivJob es una herramienta limpia y enfocada en el impacto social.</p>
+        </section>
+
+        <div class="mt-12 pt-8 border-t dark:border-slate-700 text-center text-sm text-gray-500 dark:text-gray-400">
+            Última actualización: 24 de Febrero de 2026
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+    <!-- Script sin defer para asegurar ejecución correcta -->
+    <script src="/static/js/script.js"></script>
+</body>
+</html>

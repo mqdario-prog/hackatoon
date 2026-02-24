@@ -46,36 +46,11 @@
         <p class="mt-4 text-gray-600 dark:text-gray-300 font-medium animate-pulse">Buscando las mejores ofertas...</p>
     </div>
 
-    <!-- Filtros SVG para Daltonismo -->
-    <svg style="display: none">
-        <defs>
-            <filter id="protanopia"><feColorMatrix type="matrix" values="0.567, 0.433, 0, 0, 0  0.558, 0.442, 0, 0, 0  0, 0.242, 0.758, 0, 0  0, 0, 0, 1, 0"/></filter>
-            <filter id="deuteranopia"><feColorMatrix type="matrix" values="0.625, 0.375, 0, 0, 0  0.7, 0.3, 0, 0, 0  0, 0.3, 0.7, 0, 0  0, 0, 0, 1, 0"/></filter>
-            <filter id="tritanopia"><feColorMatrix type="matrix" values="0.95, 0.05, 0, 0, 0  0, 0.433, 0.567, 0, 0  0, 0.475, 0.525, 0, 0  0, 0, 0, 1, 0"/></filter>
-        </defs>
-    </svg>
-
     <!-- Skip Link -->
     <a href="#main-content" class="bg-blue-800 text-white p-3 absolute top-0 left-0 -translate-y-full focus:translate-y-0 transition z-50">Saltar al contenido</a>
 
     <!-- Barra de Herramientas A11Y -->
-    <div class="bg-gray-100 dark:bg-dark-800 border-b border-gray-200 dark:border-dark-700 py-2 px-4 flex flex-wrap justify-end gap-3 text-sm" role="toolbar" aria-label="Herramientas de accesibilidad">
-        <select onchange="applyColorFilter(this.value)" class="bg-transparent border border-gray-300 dark:border-dark-600 rounded px-2 py-1 text-xs cursor-pointer hover:border-blue-500 text-gray-700 dark:text-gray-300" aria-label="Filtros para daltonismo">
-            <option value="">Visión Normal</option>
-            <option value="protanopia">Protanopia</option>
-            <option value="deuteranopia">Deuteranopia</option>
-            <option value="tritanopia">Tritanopia</option>
-            <option value="grayscale">Escala de Grises</option>
-        </select>
-        <div class="w-px bg-gray-300 h-6 mx-1"></div>
-        <button onclick="toggleDarkMode()" class="flex items-center gap-1 hover:text-blue-700 dark:hover:text-blue-400" aria-label="Cambiar modo oscuro/claro">
-            <span id="theme-icon">🌙</span> <span class="hidden sm:inline">Tema</span>
-        </button>
-        <button onclick="changeFontSize(1)" class="hover:text-blue-700 dark:hover:text-blue-400 font-bold px-2" aria-label="Aumentar tamaño texto">A+</button>
-        <button onclick="changeFontSize(-1)" class="hover:text-blue-700 dark:hover:text-blue-400 font-bold px-2" aria-label="Disminuir tamaño texto">A-</button>
-        <button onclick="toggleDyslexia()" class="hover:text-blue-700 dark:hover:text-blue-400" aria-label="Fuente para dislexia">Dislexia</button>
-        <button onclick="toggleContrast()" class="hover:text-blue-700 dark:hover:text-blue-400 font-bold" aria-label="Alto Contraste">Alto Contraste</button>
-    </div>
+    {% include 'toolbar.html' %}
 
     <!-- Header -->
     <header role="banner" class="bg-white dark:bg-dark-800 shadow-sm border-b border-gray-200 dark:border-dark-700 sticky top-0 z-40 transition-colors">
@@ -331,77 +306,7 @@
             </div>
         </div>
     </section>
-    <footer class="bg-blue-300 dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700 mt-auto transition-colors">
-        <div class="max-w-6xl mx-auto px-4 py-10">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                
-                <!-- Columna 1: Branding -->
-                <div class="col-span-1 md:col-span-1">
-                    <a href="/" class="text-2xl font-bold text-blue-700 dark:text-blue-400 flex items-center gap-2">
-                        <span>♿</span> InclusivJob
-                    </a>
-                    <p class="mt-4 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                        Nuestra misión es eliminar las barreras tecnológicas en la búsqueda de empleo para personas con discapacidad.
-                    </p>
-                </div>
-    
-                <!-- Columna 2: Enlaces Rápidos -->
-                <div>
-                    <h3 class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-4">Plataforma</h3>
-                    <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                        <li><a href="/" class="hover:text-blue-700 dark:hover:text-blue-400 transition-colors">Inicio</a></li>
-                        <li><a href="#" class="hover:text-blue-700 dark:hover:text-blue-400 transition-colors">Ofertas IT</a></li>
-                        <li><a href="#" class="hover:text-blue-700 dark:hover:text-blue-400 transition-colors">Ofertas Generales</a></li>
-                        <li><a href="#" class="hover:text-blue-700 dark:hover:text-blue-400 transition-colors">Consejos A11Y</a></li>
-                    </ul>
-                </div>
-    
-                <!-- Columna 3: Accesibilidad -->
-                <div>
-                    <h3 class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-4">Compromiso</h3>
-                    <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                        <li class="flex items-center gap-2">
-                            <span class="text-green-500">✔</span> Cumplimiento WCAG 2.1
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="text-green-500">✔</span> Navegación por teclado
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="text-green-500">✔</span> Lectura por voz optimizada
-                        </li>
-                    </ul>
-                </div>
-    
-                <!-- Columna 4: Contacto y Social -->
-                <div>
-                    <h3 class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-4">Contacto</h3>
-                    <div class="flex space-x-4 mb-4">
-                        <!-- GitHub -->
-                        <a href="https://github.com/mqdario-prog/hackatoon/tree/main" target="_blank" class="text-white hover:text-gray-400 dark:hover:text-black">
-                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                        </a>
-                        <!-- Mail -->
-                        <a href="mailto:hola@inclusivjob.es" class="text-white hover:text-gray-400 dark:hover:text-black">
-                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                        </a>
-                    </div>
-                    <p class="text-xs text-gray-500 dark:text-gray-500 font-mono">Build: v1.0.2 - 2026</p>
-                </div>
-            </div>
-    
-            <!-- Línea Inferior -->
-            <div class="border-t border-gray-100 dark:border-slate-700 mt-10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-xs text-gray-500 dark:text-gray-400">
-                    © 2026 InclusivJob. Proyecto desarrollado para el OdiseIA4Good.
-                </p>
-                <div class="flex gap-6">
-                    <a href="#" class="text-xs text-gray-500 hover:underline">Privacidad</a>
-                    <a href="#" class="text-xs text-gray-500 hover:underline">Términos</a>
-                    <a href="#" class="text-xs text-gray-500 hover:underline">Cookies</a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    {% include 'footer.html' %}
 </body>
   <!-- Scripts -->
   <script>
@@ -409,5 +314,4 @@
     window.marcadores = {{ marcadores | tojson | safe if marcadores else '[]' }};
 </script>
 <script src="static/js/script.js"></script>
-
 </html>

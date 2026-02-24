@@ -219,6 +219,18 @@ def home(request: Request, pagina: int = 1, busqueda: str = "", ubicacion: str =
         "marcadores": marcadores_mapa 
     })
 
+@app.get("/privacidad", response_class=HTMLResponse)
+def privacidad(request: Request):
+    return templates.TemplateResponse("privacidad.html", {"request": request})
+
+@app.get("/terminos", response_class=HTMLResponse)
+def terminos(request: Request):
+    return templates.TemplateResponse("terminos.html", {"request": request})
+
+@app.get("/cookies", response_class=HTMLResponse)
+def cookies(request: Request):
+    return templates.TemplateResponse("cookies.html", {"request": request})
+
 @app.post("/api/chat") # O la ruta que uses
 def chatear(datos: MensajeChat):
     respuesta = obtener_respuesta_ia(datos.texto)

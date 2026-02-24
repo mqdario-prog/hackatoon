@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacidad - InclusivJob</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='white' stroke='%231e40af' stroke-width='4'/><path d='M35 25a9 9 0 1 1 0 18 9 9 0 0 1 0-18zm28 15h-12v35h-8v-25h-8v10h-8v-20h26v-10h12v10z' fill='%231e40af'/><circle cx='40' cy='75' r='11' stroke='%231e40af' stroke-width='6' fill='none'/></svg>">
+    
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        inclusion: {
+                            blue: '#1E40AF',
+                            green: '#10B981',
+                            slate: '#F8FAFC',
+                        },
+                        // ESTA ES LA PARTE QUE FALTABA PARA QUE LA BARRA FUNCIONE:
+                        dark: {
+                            900: '#0f172a',
+                            800: '#1e293b',
+                            700: '#334155'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="bg-inclusion-slate dark:bg-slate-900 text-gray-800 dark:text-gray-200 font-sans leading-relaxed transition-colors duration-300">
+    
+    {% include 'toolbar.html' %}
+
+    <header class="bg-inclusion-blue dark:bg-dark-900 text-white py-6 shadow-md">
+        <div class="max-w-4xl mx-auto px-6 flex justify-between items-center">
+            <h1 class="text-2xl font-bold flex items-center gap-2"><span>♿</span> InclusivJob</h1>
+            <a href="/" class="text-sm bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition">Volver al inicio</a>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-6 py-12 bg-white dark:bg-slate-800 my-8 shadow-sm rounded-2xl border border-transparent dark:border-slate-700">
+        <h2 class="text-3xl font-extrabold text-inclusion-blue dark:text-blue-400 mb-8 border-b dark:border-slate-700 pb-4">Política de Privacidad</h2>
+        
+        <div class="space-y-8 text-gray-700 dark:text-gray-300">
+            <!-- Sección 1 -->
+            <section>
+                <h3 class="text-xl font-bold text-inclusion-blue dark:text-blue-400 mb-3">1. Responsable del Tratamiento</h3>
+                <p>InclusivJob (Proyecto OdiseIA4Good 2026).</p>
+            </section>
+
+            <!-- Sección 2 -->
+            <section>
+                <h3 class="text-xl font-bold text-inclusion-blue dark:text-blue-400 mb-3">2. Datos Recopilados</h3>
+                <ul class="list-disc pl-6 space-y-2">
+                    <li><strong>Datos Profesionales:</strong> Nombre, email, trayectoria y formación.</li>
+                    <li><strong>Datos Sensibles:</strong> Condición de discapacidad (usada solo para filtrar ofertas).</li>
+                    <li><strong>IA Privada:</strong> Procesamiento local mediante Ollama; tus datos no salen de nuestra infraestructura.</li>
+                </ul>
+            </section>
+
+            <!-- Sección 3 -->
+            <section class="bg-inclusion-green/5 dark:bg-slate-700/50 p-6 rounded-xl border-l-4 border-inclusion-green">
+                <h3 class="text-xl font-bold text-inclusion-green mb-3">3. Privacidad por Diseño (IA Local)</h3>
+                <p>InclusivJob utiliza Modelos de Lenguaje (LLM) ejecutados de forma local para garantizar que tu interacción sea privada y no entrene modelos de terceros.</p>
+            </section>
+
+            <!-- Ciclo de los datos -->
+            <section class="mt-10 p-6 bg-gray-50 dark:bg-slate-900/50 rounded-2xl border border-gray-200 dark:border-slate-700">
+                <h3 class="text-xl font-bold text-inclusion-blue dark:text-blue-400 mb-4 text-center">Ciclo de Vida de los Datos</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+                    <div class="p-4 bg-white dark:bg-slate-800 rounded-lg shadow-sm border dark:border-slate-700">
+                        <div class="text-blue-500 dark:text-blue-400 font-bold text-lg mb-1">1. Recolección</div>
+                        <p class="text-xs">Data Mining público y formulario privado de CV.</p>
+                    </div>
+                    <div class="p-4 bg-white dark:bg-slate-800 rounded-lg shadow-sm border dark:border-slate-700">
+                        <div class="text-blue-500 dark:text-blue-400 font-bold text-lg mb-1">2. Procesamiento</div>
+                        <p class="text-xs">IA Local (Ollama) y generación de PDF efímero.</p>
+                    </div>
+                    <div class="p-4 bg-white dark:bg-slate-800 rounded-lg shadow-sm border dark:border-slate-700">
+                        <div class="text-blue-500 dark:text-blue-400 font-bold text-lg mb-1">3. Almacenamiento</div>
+                        <p class="text-xs">Ofertas en MySQL. Datos de CV no persistentes.</p>
+                    </div>
+                    <div class="p-4 bg-white dark:bg-slate-800 rounded-lg shadow-sm border dark:border-slate-700">
+                        <div class="text-blue-500 dark:text-blue-400 font-bold text-lg mb-1">4. Eliminación</div>
+                        <p class="text-xs">Limpieza automática al cerrar sesión.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="mt-12 pt-8 border-t dark:border-slate-700 text-center text-sm text-gray-500 dark:text-gray-400">
+            Última actualización: 24 de Febrero de 2026
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+    <!-- JS al final -->
+    <script src="/static/js/script.js"></script>
+</body>
+</html>
