@@ -261,35 +261,66 @@ async function enviarMensaje() {
    5. RECONOCIMIENTO Y LECTURA DE VOZ
    ========================================================== */
 
-function toggleVoice() {
-    const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!Speech) { alert("Tu navegador no soporta voz."); return; }
+let voiceEnabled = false;
+
+// Esta función se activa con CUALQUIER interacción del usuario (tecla o clic)
+function inicializarVozAutomatica() {
+    if (voiceEnabled) return; // Evitar inicializar dos veces
     
-    const rec = new Speech();
-    rec.lang = 'es-ES';
-    rec.onstart = () => document.getElementById('mic-btn')?.classList.add('bg-red-500', 'text-white');
-    rec.onend = () => document.getElementById('mic-btn')?.classList.remove('bg-red-500', 'text-white');
+    voiceEnabled = true;
     
-    rec.onresult = (e) => {
-        const text = e.results[0][0].transcript;
-        const input = document.getElementById('user-input');
-        if (input) { input.value = text; enviarMensaje(); }
-    };
-    rec.start();
+    // Saludo inicial para que el usuario sepa que la web ya le escucha
+    speak("Bienvenido a InclusivJob. El lector de voz se ha activado. Use la tecla Tabulador para explorar las ofertas y secciones.");
+    
+    // Eliminar los escuchadores para no saturar el sistema
+    document.removeEventListener('keydown', inicializarVozAutomatica);
+    document.removeEventListener('click', inicializarVozAutomatica);
 }
 
-const synth = window.speechSynthesis;
-function speak(text) {
-    if (synth.speaking) synth.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = 'es-ES';
-    utter.rate = 1.1;
-    synth.speak(utter);
-}
+// Escuchamos la primera interacción para desbloquear el audio del navegador
+document.addEventListener('keydown', inicializarVozAutomatica);
+document.addEventListener('click', inicializarVozAutomatica);
 
-// Opcional: Leer al tabular
+// Lógica de lectura al mover el FOCO con el TABULADOR
 document.addEventListener('focusin', (e) => {
-    if (document.body.classList.contains('voice-active')) {
-        speak(e.target.innerText || e.target.ariaLabel || "");
+    if (!voiceEnabled) return;
+
+    const target = e.target;
+    let textToRead = "";
+
+    // 1. Identificar el tipo de elemento para que el ciego se ubique
+    let tipo = "";
+    if (target.tagName === 'A') tipo = "Enlace a: ";
+    if (target.tagName === 'BUTTON') tipo = "Botón de: ";
+    if (target.tagName === 'INPUT') {
+        tipo = "Campo de texto para " + (target.placeholder || "escribir") + ". ";
+    }
+    if (target.tagName === 'SELECT') tipo = "Menú desplegable. ";
+
+    // 2. Prioridad de lectura: aria-label -> texto interno -> placeholder
+    textToRead = target.ariaLabel || target.innerText || target.placeholder || target.title || "";
+
+    if (textToRead.trim() !== "") {
+        speak(tipo + textToRead);
     }
 });
+
+// Función central de síntesis de voz
+function speak(text) {
+    // Si ya está hablando, cortamos la frase anterior para no solapar
+    if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+    }
+    
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'es-ES';
+    utter.rate = 1.1; // Un poco más rápido para usuarios expertos
+    utter.pitch = 1.0;
+
+    // Intentar usar una voz de calidad en español
+    const voices = window.speechSynthesis.getVoices();
+    const spanishVoice = voices.find(v => v.lang.includes('es-ES'));
+    if (spanishVoice) utter.voice = spanishVoice;
+
+    window.speechSynthesis.speak(utter);
+}
