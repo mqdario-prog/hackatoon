@@ -1,13 +1,14 @@
+import time
+import pandas as pd
+import os
+import random
+import math
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
 from weasyprint import HTML
 from io import BytesIO
 from pydantic import BaseModel
-import pandas as pd
-import os
-import random
-import math
 from chatbot_service import obtener_respuesta_ia
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
@@ -16,6 +17,10 @@ from fastapi.staticfiles import StaticFiles
 
 
 engine = create_engine('mysql+pymysql://root@db/inclusivjob')
+
+app = FastAPI()
+templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Iniciamos el geolocalizador (Pon un nombre único en user_agent)
 geolocator = Nominatim(user_agent="mi_buscador_empleo_v1")
@@ -27,12 +32,13 @@ def obtener_coords(ciudad):
     if not ciudad: return None
     ciudad = ciudad.lower().strip()
     
-    ciudad_limpia = ciudad.split(',')[0] 
+    ciudad_limpia = str(ciudad).split(',')[0].split('(')[0].strip()
     
     if ciudad_limpia in coords_cache: return coords_cache[ciudad_limpia]
     
     try:
         # Buscamos en España
+        time.sleep(0.5) 
         location = geolocator.geocode(f"{ciudad_limpia}, España", timeout=10)
         if location:
             punto = (location.latitude, location.longitude)
@@ -41,11 +47,6 @@ def obtener_coords(ciudad):
     except:
         return None
     return None
-
-
-app = FastAPI()
-templates = Jinja2Templates(directory="templates")
-app.mount("/static", StaticFiles(directory="static"), name="static")
 
 class MensajeChat(BaseModel):
     texto: str
