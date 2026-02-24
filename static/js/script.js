@@ -262,43 +262,45 @@ async function enviarMensaje() {
    ========================================================== */
 
 let voiceEnabled = false;
+let isKeyboardUser = false;
 
-// Esta función se activa con CUALQUIER interacción del usuario (tecla o clic)
-function inicializarVozAutomatica() {
-    if (voiceEnabled) return; // Evitar inicializar dos veces
+// Detectar si el usuario usa el teclado o el ratón
+document.addEventListener('keydown', () => isKeyboardUser = true);
+document.addEventListener('mousedown', () => isKeyboardUser = false);
+
+function inicializarVozAutomatica(e) {
+    if (voiceEnabled) return;
     
     voiceEnabled = true;
     
-    // Saludo inicial para que el usuario sepa que la web ya le escucha
-    speak("Bienvenido a InclusivJob. El lector de voz se ha activado. Use la tecla Tabulador para explorar las ofertas y secciones.");
+    // Si la primera interacción fue con el teclado, saludamos.
+    // Si fue con el ratón, simplemente desbloqueamos el audio en silencio.
+    if (e.type === 'keydown' || isKeyboardUser) {
+        speak("Sistema de accesibilidad activado. Use el Tabulador para navegar.");
+    }
     
-    // Eliminar los escuchadores para no saturar el sistema
     document.removeEventListener('keydown', inicializarVozAutomatica);
     document.removeEventListener('click', inicializarVozAutomatica);
 }
 
-// Escuchamos la primera interacción para desbloquear el audio del navegador
 document.addEventListener('keydown', inicializarVozAutomatica);
 document.addEventListener('click', inicializarVozAutomatica);
 
-// Lógica de lectura al mover el FOCO con el TABULADOR
+// Lógica de lectura al mover el FOCO
 document.addEventListener('focusin', (e) => {
-    if (!voiceEnabled) return;
+    // REGLA DE ORO: Solo habla si el usuario está usando el TECLADO (TAB)
+    if (!voiceEnabled || !isKeyboardUser) return;
 
     const target = e.target;
     let textToRead = "";
 
-    // 1. Identificar el tipo de elemento para que el ciego se ubique
     let tipo = "";
     if (target.tagName === 'A') tipo = "Enlace a: ";
     if (target.tagName === 'BUTTON') tipo = "Botón de: ";
-    if (target.tagName === 'INPUT') {
-        tipo = "Campo de texto para " + (target.placeholder || "escribir") + ". ";
-    }
-    if (target.tagName === 'SELECT') tipo = "Menú desplegable. ";
+    if (target.tagName === 'INPUT') tipo = "Campo para " + (target.placeholder || "escribir") + ". ";
+    if (target.tagName === 'SELECT') tipo = "Menú de selección. ";
 
-    // 2. Prioridad de lectura: aria-label -> texto interno -> placeholder
-    textToRead = target.ariaLabel || target.innerText || target.placeholder || target.title || "";
+    textToRead = target.ariaLabel || target.innerText || target.placeholder || "";
 
     if (textToRead.trim() !== "") {
         speak(tipo + textToRead);
