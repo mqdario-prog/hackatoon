@@ -47,7 +47,7 @@ def obtener_coords(ciudad):
             return punto
         else:
             print(f"❌ No se encontró: {ciudad_limpia}")
-    except:
+    except Exception as e:
         print(f"⚠️ Error API en {ciudad_limpia}: {e}")
         return None
     return None
