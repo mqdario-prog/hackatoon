@@ -43,12 +43,12 @@ def obtener_coords(ciudad):
         if location:
             punto = (location.latitude, location.longitude)
             coords_cache[ciudad_limpia] = punto
-            print(f"✅ Geocodificado: {c_limpia} -> {punto}")
+            print(f"✅ Geocodificado: {ciudad_limpia} -> {punto}")
             return punto
         else:
-            print(f"❌ No se encontró: {c_limpia}")
+            print(f"❌ No se encontró: {ciudad_limpia}")
     except:
-        print(f"⚠️ Error API en {c_limpia}: {e}")
+        print(f"⚠️ Error API en {ciudad_limpia}: {e}")
         return None
     return None
 
