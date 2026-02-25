@@ -28,13 +28,50 @@ geolocator = Nominatim(user_agent="InclusivJob_Social_Project_Hackathon_2026_Fin
 # Caché simple para no preguntar a internet todo el rato
 coords_cache = {}
 
+COORDS_PREDETERMINADAS = {
+    "madrid": (40.4167, -3.7037),
+    "barcelona": (41.3851, 2.1734),
+    "valencia": (39.4699, -0.3763),
+    "sevilla": (37.3891, -5.9845),
+    "malaga": (36.7213, -4.4213),
+    "zaragoza": (41.6488, -0.8891),
+    "murcia": (37.9922, -1.1307),
+    "palma": (39.5696, 2.6502),
+    "vigo": (42.2406, -8.7207),
+    "alicante": (38.3452, -0.4815),
+    "bilbao": (43.2630, -2.9350),
+    "vallromanes": (41.5311, 2.3025),
+    "alcasser": (39.3695, -0.4452),
+    "benavente": (42.0025, -5.6769),
+    "logroño": (42.4627, -2.4450),
+    "alcala de guadaira": (37.3333, -5.8500),
+    "getafe": (40.3084, -3.7312),
+    "borox": (40.0706, -3.7356),
+    "leganes": (40.3282, -3.7635),
+    "santiago de compostela": (42.8782, -8.5448),
+    "gÜimar": (28.3144, -16.4136),
+    "selva del camp": (41.2144, 1.1372),
+    "paracuellos del jarama": (40.5050, -3.4900)
+}
+
 def obtener_coords(ciudad):
     if not ciudad: return None
     ciudad = ciudad.lower().strip()
     
     ciudad_limpia = str(ciudad).split(',')[0].split('(')[0].strip()
+    c_key = ciudad_limpia.replace('á','a').replace('é','e').replace('í','i').replace('ó','o').replace('ú','u')
     
-    if ciudad_limpia in coords_cache: return coords_cache[ciudad_limpia]
+    # 2. CASO ESPECIAL: ESPAÑA O REMOTO
+    if c_key in ["españa", "100% remoto", "remoto", "vagas", "varias"]:
+        return (40.4637, -3.7492) # Centro de España
+
+    # 3. BUSCAR EN DICCIONARIO LOCAL (Evita llamar a la API y el error 429)
+    if c_key in COORDS_PREDETERMINADAS:
+        return COORDS_PREDETERMINADAS[c_key]
+
+    # 4. BUSCAR EN CACHÉ DE SESIÓN
+    if ciudad_limpia in coords_cache:
+        return coords_cache[ciudad_limpia]
     
     try:
         # Buscamos en España
@@ -43,10 +80,7 @@ def obtener_coords(ciudad):
         if location:
             punto = (location.latitude, location.longitude)
             coords_cache[ciudad_limpia] = punto
-            print(f"✅ Geocodificado: {ciudad_limpia} -> {punto}")
             return punto
-        else:
-            print(f"❌ No se encontró: {ciudad_limpia}")
     except Exception as e:
         print(f"⚠️ Error API en {ciudad_limpia}: {e}")
         return None
