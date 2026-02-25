@@ -43,10 +43,15 @@ def obtener_coords(ciudad):
         if location:
             punto = (location.latitude, location.longitude)
             coords_cache[ciudad_limpia] = punto
+            print(f"✅ Geocodificado: {c_limpia} -> {punto}")
             return punto
+        else:
+            print(f"❌ No se encontró: {c_limpia}")
     except:
+        print(f"⚠️ Error API en {c_limpia}: {e}")
         return None
     return None
+
 
 class MensajeChat(BaseModel):
     texto: str
