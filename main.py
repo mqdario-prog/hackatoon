@@ -23,7 +23,7 @@ templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Iniciamos el geolocalizador (Pon un nombre único en user_agent)
-geolocator = Nominatim(user_agent="mi_buscador_empleo_v1")
+geolocator = Nominatim(user_agent="InclusivJob_Social_Project_Hackathon_2026_Final")
 
 # Caché simple para no preguntar a internet todo el rato
 coords_cache = {}
@@ -190,7 +190,6 @@ def home(request: Request, pagina: int = 1, busqueda: str = "", ubicacion: str =
     inicio = (pagina - 1) * TOTAL_POR_PAGINA
     fin = inicio + TOTAL_POR_PAGINA
     
-    # ESTA LÍNEA ES LA QUE TE FALTA O NO SE LEÍA
     ofertas_paginadas = df.iloc[inicio:fin].to_dict(orient='records')
         # Generar datos para el mapa (Solo de las ofertas paginadas para no saturar)
     # O mejor: de TODAS las ofertas filtradas (para ver el panorama completo)
@@ -208,6 +207,7 @@ def home(request: Request, pagina: int = 1, busqueda: str = "", ubicacion: str =
                 "ciudad": ciudad,
                 "cantidad": int(cantidad) # Convertir a int nativo para JSON
             })
+        time.sleep(0.5) 
 
 
     # --- RETORNO FINAL ---
