@@ -114,29 +114,49 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- C. Mapa de Ofertas (Leaflet) ---
+    // --- C. Mapa de Ofertas (CARGA ASÍNCRONA CORREGIDA) ---
     const mapDiv = document.getElementById('mapa-ofertas');
     if (mapDiv && typeof L !== 'undefined') {
+        // Inicialización base
         const map = L.map('mapa-ofertas').setView([40.416775, -3.703790], 6);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OSM' }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
+            attribution: '&copy; OSM' 
+        }).addTo(map);
 
-        const markers = L.markerClusterGroup({ showCoverageOnHover: false });
+        const markersGroup = L.markerClusterGroup({ showCoverageOnHover: false });
         const blueIcon = new L.Icon({
             iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
             shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
             iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
         });
 
-        const data = window.marcadores || [];
-        data.forEach(m => {
-            if (m.lat && m.lon) {
-                const marker = L.marker([m.lat, m.lon], {icon: blueIcon});
-                marker.bindPopup(`<div class="text-center"><h4 class="font-bold">${m.ciudad}</h4><p class="text-sm">${m.cantidad} ofertas</p><a href="/?ubicacion=${m.ciudad}" class="text-xs underline text-blue-600">Ver listado</a></div>`);
-                markers.addLayer(marker);
-            }
-        });
-        map.addLayer(markers);
-        if (data.length > 0) map.fitBounds(markers.getBounds(), {padding: [50, 50]});
+        // Hacemos la petición a la nueva API que creamos en main.py
+        fetch('/api/marcadores')
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    data.forEach(m => {
+                        if (m.lat && m.lon) {
+                            const marker = L.marker([m.lat, m.lon], {icon: blueIcon});
+                            marker.bindPopup(`
+                                <div class="text-center">
+                                    <h4 class="font-bold text-gray-800">${m.ciudad}</h4>
+                                    <p class="text-sm text-blue-600 font-bold">${m.cantidad} ofertas</p>
+                                    <a href="/?ubicacion=${m.ciudad}" class="text-xs underline text-gray-500 hover:text-blue-500">Ver listado</a>
+                                </div>
+                            `);
+                            markersGroup.addLayer(marker);
+                        }
+                    });
+                    map.addLayer(markersGroup);
+                    // Encuadrar el mapa para que se vean los puntos cargados
+                    map.fitBounds(markersGroup.getBounds(), {padding: [50, 50]});
+                }
+            })
+            .catch(err => console.error("Error cargando mapa:", err));
+
+        // Solucionar problemas de renderizado al redimensionar
+        setTimeout(() => map.invalidateSize(), 500);
     }
 
     // --- D. Validación de Formularios ---
@@ -211,7 +231,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 4000);
     }
 });
-
 /* ==========================================================
    4. LOGICA DEL CHATBOT IA
    ========================================================== */
