@@ -148,15 +148,15 @@ def generar_cv(
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request, pagina: int = 1, busqueda: str = "", ubicacion: str = ""):
-    # 1. Cargar datos
+    # 1. Cargar datos (Optimizado: solo traemos las columnas necesarias)
     try:
-        df = pd.read_sql("SELECT * FROM ofertas", engine)
+        df = pd.read_sql("SELECT Titulo, Empresa, Ubicacion, Enlace, Fuente, Etiquetas FROM ofertas", engine)
         df = df.fillna("") 
     except Exception as e:
         print(f"Error cargando MySQL: {e}")
         df = pd.DataFrame(columns=["Titulo", "Empresa", "Ubicacion", "Enlace", "Fuente", "Etiquetas"])
 
-       # ---------------------------------------------------------
+    # ---------------------------------------------------------
     # 2. FILTRADO (BÚSQUEDA + UBICACIÓN + DISTANCIA)
     # ---------------------------------------------------------
     
@@ -169,8 +169,7 @@ def home(request: Request, pagina: int = 1, busqueda: str = "", ubicacion: str =
             df['Empresa'].str.lower().str.contains(busqueda, na=False)
         ]
     
-    # B) Filtro por Ubicación + Radio (Lógica Nueva)
-    # Capturamos el radio desde la URL (si no viene, es 0)
+    # B) Filtro por Ubicación + Radio
     try: 
         radio_km = int(request.query_params.get("radio", 0))
     except: 
@@ -183,20 +182,16 @@ def home(request: Request, pagina: int = 1, busqueda: str = "", ubicacion: str =
         ubicacion_usuario = ubicacion.lower().strip()
         
         if radio_km > 0:
-            # --- CÁLCULO DE DISTANCIA (Geopy) ---
             coords_origen = obtener_coords(ubicacion_usuario)
-            
             if coords_origen:
                 indices_validos = []
                 for idx, row in df.iterrows():
                     loc_oferta = str(row['Ubicacion']).lower().strip()
-                    
-                    # 1. Coincidencia exacta (siempre vale)
+                    # Coincidencia exacta
                     if ubicacion_usuario in loc_oferta:
                         indices_validos.append(idx)
                         continue
-                    
-                    # 2. Cálculo de distancia
+                    # Cálculo de distancia
                     coords_destino = obtener_coords(loc_oferta)
                     if coords_destino:
                         try:
@@ -204,52 +199,26 @@ def home(request: Request, pagina: int = 1, busqueda: str = "", ubicacion: str =
                             if dist <= radio_km:
                                 indices_validos.append(idx)
                         except: pass
-                
-                # Filtramos el DataFrame con los índices que cumplen
                 df = df.loc[indices_validos]
             else:
-                # Si falla geocodificación, volvemos a búsqueda de texto simple
                 df = df[df['Ubicacion'].str.lower().str.contains(ubicacion_usuario, na=False)]
         else:
-            # --- BÚSQUEDA EXACTA (Sin radio) ---
             df = df[df['Ubicacion'].str.lower().str.contains(ubicacion_usuario, na=False)]
 
-    # --- BLOQUE DE PAGINACIÓN (Sácalo fuera de cualquier IF/ELSE) ---
+    # --- BLOQUE DE PAGINACIÓN (Optimizado para evitar errores de rango) ---
     TOTAL_POR_PAGINA = 5
     total_ofertas = len(df)
-    
-    if total_ofertas > 0:
-        total_paginas = math.ceil(total_ofertas / TOTAL_POR_PAGINA)
-    else:
-        total_paginas = 1
+    total_paginas = max(1, math.ceil(total_ofertas / TOTAL_POR_PAGINA))
 
-    if pagina < 1: pagina = 1
-    if pagina > total_paginas: pagina = total_paginas
+    # Aseguramos que la página esté en el rango correcto
+    pagina = max(1, min(pagina, total_paginas))
 
     inicio = (pagina - 1) * TOTAL_POR_PAGINA
     fin = inicio + TOTAL_POR_PAGINA
     
     ofertas_paginadas = df.iloc[inicio:fin].to_dict(orient='records')
-        # Generar datos para el mapa (Solo de las ofertas paginadas para no saturar)
-    # O mejor: de TODAS las ofertas filtradas (para ver el panorama completo)
-    marcadores_mapa = []
-    
-    # Agrupamos por ciudad para no poner 100 puntos en el mismo sitio
-    conteo_ciudades = df['Ubicacion'].value_counts()
-    
-    for ciudad, cantidad in conteo_ciudades.items():
-        coords = obtener_coords(ciudad)
-        if coords:
-            marcadores_mapa.append({
-                "lat": coords[0],
-                "lon": coords[1],
-                "ciudad": ciudad,
-                "cantidad": int(cantidad) # Convertir a int nativo para JSON
-            })
-        time.sleep(0.5) 
 
-
-    # --- RETORNO FINAL ---
+    # --- RETORNO FINAL (Ya no procesamos el mapa aquí para ganar velocidad) ---
     return templates.TemplateResponse("index.html", {
         "request": request,
         "ofertas": ofertas_paginadas,  
@@ -258,9 +227,29 @@ def home(request: Request, pagina: int = 1, busqueda: str = "", ubicacion: str =
         "total_paginas": total_paginas,
         "busqueda": busqueda,
         "ubicacion": ubicacion,
-        "radio": radio_km,  
-        "marcadores": marcadores_mapa 
+        "radio": radio_km
     })
+
+@app.get("/api/marcadores")
+async def api_marcadores():
+    try:
+        df = pd.read_sql("SELECT Ubicacion FROM ofertas", engine)
+        top_ciudades = df['Ubicacion'].value_counts().head(15)
+        
+        marcadores = []
+        for ciudad, cantidad in top_ciudades.items():
+            coords = obtener_coords(ciudad) # Esta función usa el diccionario y el sleep
+            if coords:
+                marcadores.append({
+                    "lat": coords[0],
+                    "lon": coords[1],
+                    "ciudad": ciudad,
+                    "cantidad": int(cantidad)
+                })
+        return marcadores
+    except Exception as e:
+        print(f"Error al obtener marcadores: {e}")
+        return []
 
 @app.get("/privacidad", response_class=HTMLResponse)
 def privacidad(request: Request):
